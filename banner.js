@@ -1,7 +1,19 @@
-/** name:Banner.js
- *  author:Pengcheng Yang/nbugs.com
- *	description:This widget powered by YPC from nbugs.com which is written by original javascript and it also support mobile touch events. You can choose a direction and make it auto slide with its default slide type is "rtl" means "right to left". You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each item.
-*/
+/**name:Banner.js*author:Pengcheng Yang/nbugs.com*description:This widget powered by YPC from "nbugs.com" which is written by original javascript. You can choose a direction and make it auto slide. It also support mobile touch events. You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each anchor.*/
+function BlankTimer(){};
+BlankTimer.prototype = {
+	constructor : BlankTimer,
+	t : null,
+	_start : function(callBack, touch){
+		var _this = this;
+		this.t = setTimeout(function(){
+			callBack();
+			_this._end();
+		}, touch ? 0 : 5000);
+	},
+	_end: function(){
+		clearInterval(this.t);
+	}
+};
 function Banner(obj){
 	this.position = document.querySelector(obj.position);
 	this.direction = obj.direction.toLowerCase() === "ltr" ? true: false;
@@ -25,10 +37,10 @@ Banner.prototype = {
 		this.position.appendChild(this.banner);
 		this.bannerWidth = parseFloat(document.defaultView.getComputedStyle(this.banner, null).width);
 	},
-	_buildContainer : function(){
+	_buildContainer : function() {
 		this.container = document.createElement("div");
 		this.container.className = "container";
-		for (var i = 0; i < 3; i++) {
+		for(var i = 0; i < 3; i++){
 			this["item" + (i + 1)] = document.createElement("a");
 			this["item" + (i + 1) + "Img"] = document.createElement("img");
 			this["item" + (i + 1)].appendChild(this["item" + (i + 1) + "Img"]);
@@ -36,13 +48,13 @@ Banner.prototype = {
 		}
 		this.banner.appendChild(this.container);
 	},
-	_buildTitle : function() {
+	_buildTitle: function(){
 		this.title = document.createElement("div");
 		this.title.className = "title";
 		this.titleText = document.createElement("span");
 		this.iconBox = document.createElement("p");
 		this.icons = new Array(this.receiveData.length);
-		for (var i = 0; i < this.icons.length; i++) {
+		for(var i = 0; i < this.icons.length; i++){
 			this.icons[i] = document.createElement("em");
 			this.icons[i].appendChild(document.createTextNode("●"));
 			this.iconBox.appendChild(this.icons[i]);
@@ -60,7 +72,7 @@ Banner.prototype = {
 		this.item2Img.setAttribute("src", this.receiveData[this.currentItem].imgSrc);
 		this.item3.setAttribute("href", this.receiveData[this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1].anchorHref);
 		this.item3Img.setAttribute("src", this.receiveData[this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1].imgSrc);
-		if (this.receiveAttributes){
+		if(this.receiveAttributes){
 			this.setItemAttributes();
 		}
 	},
@@ -95,15 +107,15 @@ Banner.prototype = {
 		this.blankTime._start(!type ?
 		function(){
 			var t = setInterval(function(){
-				if(offsetX > 0){
+				if (offsetX > 0) {
 					offsetX -= _this.bannerWidth / 100;
 					_this._move(true, offsetX);
-				}else{
+				} else {
 					clearInterval(t);
 					offsetX = 0;
 					_this._move(true, offsetX);
 					_this.currentItem = _this.currentItem + 1 > _this.receiveData.length - 1 ? 0 : _this.currentItem + 1;
-					_this._highlightIcon();
+					_this._highlightIcon(type);
 					_this._setData();
 					_this._autoMove();
 				}
@@ -118,7 +130,7 @@ Banner.prototype = {
 					offsetX = _this.bannerWidth;
 					_this._move(false, offsetX);
 					_this.currentItem = _this.currentItem - 1 < 0 ? _this.receiveData.length - 1 : _this.currentItem - 1;
-					_this._highlightIcon();
+					_this._highlightIcon(type);
 					_this._setData();
 					_this._autoMove(type);
 				}
@@ -137,7 +149,9 @@ Banner.prototype = {
 		}
 	},
 	_setMovements : function(){
-		var _this = this, startX = 0, touchDirection;
+		var _this = this,
+		startX = 0,
+		touchDirection;
 		this.banner.addEventListener("touchstart", function(e){
 			e.preventDefault();
 			startX = e.changedTouches[0].pageX;
@@ -146,36 +160,20 @@ Banner.prototype = {
 		this.banner.addEventListener("touchmove", function(e){
 			e.preventDefault();
 			touchDirection = e.changedTouches[0].pageX > startX;
-			_this._touchMove(touchDirection, Math.abs(e.changedTouches[0].pageX - startX));
+			_this._touchMove(touchDirection, Math.abs(e.changedTouches[0].pageX - startX))
 		}, false);
-		this.banner.addEventListener("touchend", function(e){
+		this.banner.addEventListener("touchend", function(e) {
 			e.preventDefault();
-			_this._autoMove(touchDirection, e.changedTouches[0].pageX, true);
+			_this._autoMove(touchDirection, e.changedTouches[0].pageX, true)
 		}, false);
 	},
 	setItemAttributes : function(attributes){
 		this.receiveAttributes = this.receiveAttributes || attributes;
-		for(var i in this.receiveAttributes[this.direction ? this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1 : this.currentItem >= 0 ? this.currentItem - 1 : this.receiveData.length - 1]) {
+		for(var i in this.receiveAttributes[this.direction ? this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1 : this.currentItem >= 0 ? this.currentItem - 1 : this.receiveData.length - 1]){
 			this.item2.removeAttribute(i);
 		}
-		for(var i in this.receiveAttributes[this.currentItem]) {
+		for(var i in this.receiveAttributes[this.currentItem]){
 			this.item2.setAttribute(i, this.receiveAttributes[this.currentItem][i]);
 		}
-	}
-};
-function BlankTimer(){};
-BlankTimer.prototype = {
-	constructor : BlankTimer,
-	t : null,
-	_start : function(callBack, touch){
-		var _this = this;
-		this.t = setTimeout(function(){
-			callBack();
-			_this._end();
-		},
-		touch ? 0 : 5000);
-	},
-	_end : function(){
-		clearInterval(this.t);
 	}
 };
