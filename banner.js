@@ -1,4 +1,8 @@
-/**name:Banner.js*author:Pengcheng Yang/nbugs.com*description:This widget powered by YPC from "nbugs.com" which is written by original javascript. You can choose a direction and make it auto slide. It also support mobile touch events. You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each anchor.*/
+/**
+ *name : Banner.js
+ *author : Pengcheng Yang/nbugs.com
+ *description : description:This widget powered by YPC from nbugs.com which is written by original javascript and it also support mobile touch events. You can choose a direction and make it auto slide with its default slide type is "rtl" means "right to left". You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each item.
+*/
 function BlankTimer(){};
 BlankTimer.prototype = {
 	constructor : BlankTimer,
@@ -160,11 +164,11 @@ Banner.prototype = {
 		this.banner.addEventListener("touchmove", function(e){
 			e.preventDefault();
 			touchDirection = e.changedTouches[0].pageX > startX;
-			_this._touchMove(touchDirection, Math.abs(e.changedTouches[0].pageX - startX))
+			_this._touchMove(touchDirection, Math.abs(e.changedTouches[0].pageX - startX));
 		}, false);
 		this.banner.addEventListener("touchend", function(e) {
 			e.preventDefault();
-			_this._autoMove(touchDirection, e.changedTouches[0].pageX, true)
+			_this._autoMove(touchDirection, e.changedTouches[0].pageX, true);
 		}, false);
 	},
 	setItemAttributes : function(attributes){
