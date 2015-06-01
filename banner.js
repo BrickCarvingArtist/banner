@@ -21,6 +21,7 @@ BlankTimer.prototype = {
 function Banner(obj){
 	this.position = document.querySelector(obj.position);
 	this.direction = obj.direction.toLowerCase() === "ltr" ? true: false;
+	this.changeDirection = obj.changeDirection ? true : false;
 	this.receiveData = obj.data;
 	this.currentItem = 0;
 	this._init();
@@ -120,7 +121,7 @@ Banner.prototype = {
 					_this.currentItem = _this.currentItem + 1 > _this.receiveData.length - 1 ? 0 : _this.currentItem + 1;
 					_this._highlightIcon(type);
 					_this._setData();
-					_this._autoMove(type);
+					_this._autoMove(_this.changeDirection ? type : null);
 				}
 			}, 5);
 		} : function(){
@@ -135,7 +136,7 @@ Banner.prototype = {
 					_this.currentItem = _this.currentItem - 1 < 0 ? _this.receiveData.length - 1 : _this.currentItem - 1;
 					_this._highlightIcon(type);
 					_this._setData();
-					_this._autoMove(type);
+					_this._autoMove(_this.changeDirection ? type : null);
 				}
 			}, 5);
 		}, touch);
