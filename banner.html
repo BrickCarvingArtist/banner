@@ -1,0 +1,61 @@
+﻿<!DOCTYPE>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="utf-8" />
+		<link rel="stylesheet" href="cssreset.css" />
+		<link rel="stylesheet" href="banner.css" />
+		<title>Banner</title>
+	</head>
+	<body></body>
+	<script src="banner.js"></script>
+	<script>
+		var banner = new Banner({
+			position : "body",//放入位置
+			direction : "rtl",//轮播方向,ltr从左往右,rtl从右往左
+			data : [
+				{
+					anchorHref : "javascript:void(0);",//图片链接地址
+					imgSrc : "1.jpg",//图片地址
+					title : "标题1"//标题名称
+				},
+				{
+					anchorHref : "javascript:void(0);",
+					imgSrc : "2.jpg",
+					title : "标题2"
+				},
+				{
+					anchorHref : "javascript:void(0);",
+					imgSrc : "3.jpg",
+					title : "标题3"
+				},
+				{
+					anchorHref : "javascript:void(0);",
+					imgSrc : "4.jpg",
+					title : "标题4"
+				},
+				{
+					anchorHref : "javascript:void(0);",
+					imgSrc : "5.jpg",
+					title : "标题5"
+				}
+			]
+		});//创建一个banner,同个页面能多次以这种方式创建新的banner
+		banner.setItemAttributes([
+			{
+				data1 : "data1",
+				src1 : "src1"
+			},
+			{
+				data2 : "data2",
+				src2 : "src2"
+			},
+			{
+				data3 : "data3"
+			},
+			{},
+			{
+				src5 : "src5"
+			}
+		]);//为每个轮播项新增其独有的html标签属性a,如果某个轮播项不需要新增属性,需用空对象{}占位,属性值对单体对象的个数需要与轮播项个数一致
+	</script>
+</html>
