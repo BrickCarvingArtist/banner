@@ -1,6 +1,6 @@
 /** name:Banner.js
  *  author:Pengcheng Yang/nbugs.com
- *	description:This widget powered by YPC from "nbugs.com" which is written by original javascript. You can choose a direction and make it auto slide. It also support mobile touch events. You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each anchor.
+ *	description:This widget powered by YPC from nbugs.com which is written by original javascript and it also support mobile touch events. You can choose a direction and make it auto slide with its default slide type is "rtl" means "right to left". You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each item.
 */
 function Banner(obj){
 	this.position = document.querySelector(obj.position);
