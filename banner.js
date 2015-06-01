@@ -105,23 +105,22 @@ Banner.prototype = {
 		}
 	},
 	_autoMove : function(type, x, touch){
-		var _this = this,
-		offsetX = x ? x: type ? 0 : this.bannerWidth;
+		var _this = this, offsetX = x ? x : type ? 0 : this.bannerWidth;
 		this.blankTime = new BlankTimer();
 		this.blankTime._start(!type ?
 		function(){
 			var t = setInterval(function(){
-				if (offsetX > 0) {
+				if(offsetX > 0){
 					offsetX -= _this.bannerWidth / 100;
 					_this._move(true, offsetX);
-				} else {
+				}else{
 					clearInterval(t);
 					offsetX = 0;
 					_this._move(true, offsetX);
 					_this.currentItem = _this.currentItem + 1 > _this.receiveData.length - 1 ? 0 : _this.currentItem + 1;
 					_this._highlightIcon(type);
 					_this._setData();
-					_this._autoMove();
+					_this._autoMove(type);
 				}
 			}, 5);
 		} : function(){
@@ -153,9 +152,7 @@ Banner.prototype = {
 		}
 	},
 	_setMovements : function(){
-		var _this = this,
-		startX = 0,
-		touchDirection;
+		var _this = this, startX = 0, touchDirection;
 		this.banner.addEventListener("touchstart", function(e){
 			e.preventDefault();
 			startX = e.changedTouches[0].pageX;
