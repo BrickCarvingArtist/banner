@@ -150,7 +150,7 @@ Banner.prototype = {
 		}, false);
 		this.banner.addEventListener("touchend", function(e){
 			e.preventDefault();
-			_this._autoMove(false, e.changedTouches[0].pageX, true);
+			_this._autoMove(touchDirection, e.changedTouches[0].pageX, true);
 		}, false);
 	},
 	setItemAttributes : function(attributes){
