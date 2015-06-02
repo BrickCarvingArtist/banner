@@ -166,7 +166,11 @@ Banner.prototype = {
 		}, false);
 		this.banner.addEventListener("touchend", function(e) {
 			e.preventDefault();
-			_this._autoMove(touchDirection, e.changedTouches[0].pageX, true);
+			if(Math.abs(e.changedTouches[0].pageX - startX) < 10){
+				window.location.href = e.target.parentNode.getAttribute("href");
+			}else{
+				_this._autoMove(touchDirection, e.changedTouches[0].pageX, true);
+			}
 		}, false);
 	},
 	setItemAttributes : function(attributes){
