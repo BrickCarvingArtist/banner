@@ -123,7 +123,7 @@ Banner.prototype = {
 					_this._setData();
 					_this._autoMove(_this.changeDirection ? type : null);
 				}
-			}, 5);
+			}, touch ? 1 : 5);
 		} : function(){
 			var t = setInterval(function(){
 				if(offsetX < _this.bannerWidth){
@@ -138,7 +138,7 @@ Banner.prototype = {
 					_this._setData();
 					_this._autoMove(_this.changeDirection ? type : null);
 				}
-			}, 5);
+			}, touch ? 1 : 5);
 		}, touch);
 	},
 	_touchMove : function(type, distance){
@@ -169,7 +169,7 @@ Banner.prototype = {
 			if(Math.abs(e.changedTouches[0].pageX - startX) < 10){
 				window.location.href = e.target.parentNode.getAttribute("href");
 			}else{
-				_this._autoMove(touchDirection, e.changedTouches[0].pageX, true);
+				_this._autoMove(touchDirection, touchDirection ? Math.abs(e.changedTouches[0].pageX - startX) :  _this.bannerWidth - Math.abs(e.changedTouches[0].pageX - startX), true);
 			}
 		}, false);
 	},
