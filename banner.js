@@ -29,18 +29,15 @@ function Banner(obj){
 Banner.prototype = {
 	constructor : Banner,
 	_init : function(){
-		this._buildDom();
-		this._setData();
-		this._setMovements();
-		this._autoMove(this.direction);
+		this._buildDom()._setData()._setMovements()._autoMove(this.direction);
 	},
 	_buildDom : function(){
 		this.banner = document.createElement("div");
 		this.banner.className = "banner";
-		this._buildContainer();
-		this._buildTitle();
+		this._buildContainer()._buildTitle();
 		this.position.appendChild(this.banner);
 		this.bannerWidth = parseFloat(document.defaultView.getComputedStyle(this.banner, null).width);
+		return this;
 	},
 	_buildContainer : function() {
 		this.container = document.createElement("div");
@@ -52,6 +49,7 @@ Banner.prototype = {
 			this.container.appendChild(this["item" + (i + 1)]);
 		}
 		this.banner.appendChild(this.container);
+		return this;
 	},
 	_buildTitle: function(){
 		this.title = document.createElement("div");
@@ -80,6 +78,7 @@ Banner.prototype = {
 		if(this.receiveAttributes){
 			this.setItemAttributes();
 		}
+		return this;
 	},
 	_setTitle : function(){
 		this.titleText.innerHTML = this.receiveData[this.currentItem].title;
@@ -93,6 +92,7 @@ Banner.prototype = {
 		this.icons[(touch || this.direction) ? this.currentItem < this.receiveData.length - 1 ? this.currentItem + 1 : 0 : this.currentItem > 0 ? this.currentItem - 1 : this.receiveData.length - 1].removeAttribute("class");
 		this.icons[this.currentItem].className = "chosen";
 		this._setTitle();
+		return this;
 	},
 	_move : function(type, x){
 		if(type){
@@ -119,9 +119,7 @@ Banner.prototype = {
 					offsetX = 0;
 					_this._move(true, offsetX);
 					_this.currentItem = _this.currentItem + 1 > _this.receiveData.length - 1 ? 0 : _this.currentItem + 1;
-					_this._highlightIcon(type);
-					_this._setData();
-					_this._autoMove(_this.changeDirection ? type : null);
+					_this._highlightIcon(type)._setData()._autoMove(_this.changeDirection ? type : null);
 				}
 			}, touch ? 1 : 5);
 		} : function(){
@@ -134,9 +132,7 @@ Banner.prototype = {
 					offsetX = _this.bannerWidth;
 					_this._move(false, offsetX);
 					_this.currentItem = _this.currentItem - 1 < 0 ? _this.receiveData.length - 1 : _this.currentItem - 1;
-					_this._highlightIcon(type);
-					_this._setData();
-					_this._autoMove(_this.changeDirection ? type : null);
+					_this._highlightIcon(type)._setData()._autoMove(_this.changeDirection ? type : null);
 				}
 			}, touch ? 1 : 5);
 		}, touch);
@@ -172,6 +168,7 @@ Banner.prototype = {
 				_this._autoMove(touchDirection, touchDirection ? Math.abs(e.changedTouches[0].pageX - startX) :  _this.bannerWidth - Math.abs(e.changedTouches[0].pageX - startX), true);
 			}
 		}, false);
+		return this;
 	},
 	setItemAttributes : function(attributes){
 		this.receiveAttributes = this.receiveAttributes || attributes;
