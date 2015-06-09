@@ -43,8 +43,10 @@
 	float:left;
 	margin-left:.675rem;
 	display:block;
-	width:9rem;
+	max-width:10.5rem;
+	white-space:nowrap;
 	overflow:hidden;
+	text-overflow:ellipsis;
 }
 .banner .title p{
 	float:right;
