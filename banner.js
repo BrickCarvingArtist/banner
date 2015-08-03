@@ -2,11 +2,11 @@ var Banner = window.Banner || (function(setting){
 	"use strict";
 	Banner.INFO = {
 		AUTHOR : "BrickCarvingArtist/GitHub",
-		BEGINTIME : "2015/08/03",
+		BEGINTIME : "2015/06/01",
 		LATESTRELEASE : "2015/08/03",
 		LICENSE : "LGPL",
 		NAME : "Banner",
-		VERSION : "0.1"
+		VERSION : "1.0"
 	};
 	if(setting.info){
 		console.warn(Banner.INFO);
