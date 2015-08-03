@@ -1,182 +1,216 @@
-/**
- *name : Banner.js
- *author : Pengcheng Yang/nbugs.com
- *description : This widget powered by YPC from nbugs.com which is written by original javascript and it also supports mobile touch events. You can choose a direction and make it slide automatically with its default slide type "rtl" means "right to left". You may use it easily even you don't know anything about css layouts. It proves an interface to make it work in your pages and has a outset function to add attributes if you need towards each item.
-*/
-function BlankTimer(){};
-BlankTimer.prototype = {
-	constructor : BlankTimer,
-	t : null,
-	_start : function(callBack, touch){
-		var _this = this;
-		this.t = setTimeout(function(){
-			callBack();
-			_this._end();
-		}, touch ? 0 : 5000);
-	},
-	_end: function(){
-		clearInterval(this.t);
+var Banner = window.Banner || (function(setting){
+	"use strict";
+	Banner.INFO = {
+		AUTHOR : "BrickCarvingArtist/GitHub",
+		BEGINTIME : "2015/08/03",
+		LATESTRELEASE : "2015/08/03",
+		LICENSE : "LGPL",
+		NAME : "Banner",
+		VERSION : "0.1"
+	};
+	if(setting.info){
+		console.warn(Banner.INFO);
 	}
-};
-function Banner(obj){
-	this.position = document.querySelector(obj.position);
-	this.direction = obj.direction.toLowerCase() === "ltr" ? true: false;
-	this.changeDirection = obj.changeDirection ? true : false;
-	this.receiveData = obj.data;
-	this.currentItem = 0;
-	this._init();
-};
-Banner.prototype = {
-	constructor : Banner,
-	_init : function(){
-		this._buildDom()._setData()._setMovements()._autoMove(this.direction);
-	},
-	_buildDom : function(){
-		this.banner = document.createElement("div");
-		this.banner.className = "banner";
-		this._buildContainer()._buildTitle();
-		this.position.appendChild(this.banner);
-		this.bannerWidth = parseFloat(document.defaultView.getComputedStyle(this.banner, null).width);
-		return this;
-	},
-	_buildContainer : function() {
-		this.container = document.createElement("div");
-		this.container.className = "container";
-		for(var i = 0; i < 3; i++){
-			this["item" + (i + 1)] = document.createElement("a");
-			this["item" + (i + 1) + "Img"] = document.createElement("img");
-			this["item" + (i + 1)].appendChild(this["item" + (i + 1) + "Img"]);
-			this.container.appendChild(this["item" + (i + 1)]);
-		}
-		this.banner.appendChild(this.container);
-		return this;
-	},
-	_buildTitle: function(){
-		this.title = document.createElement("div");
-		this.title.className = "title";
-		this.titleText = document.createElement("span");
-		this.iconBox = document.createElement("p");
-		this.icons = new Array(this.receiveData.length);
-		for(var i = 0; i < this.icons.length; i++){
-			this.icons[i] = document.createElement("em");
-			this.icons[i].appendChild(document.createTextNode("●"));
-			this.iconBox.appendChild(this.icons[i]);
-		}
-		this.title.appendChild(this.titleText);
-		this.title.appendChild(this.iconBox);
-		this.banner.appendChild(this.title);
-		this._highlightIcon();
-	},
-	_setData : function(){
-		this._resetPosition();
-		this.item1.setAttribute("href", this.receiveData[this.currentItem - 1 < 0 ? this.receiveData.length - 1 : this.currentItem - 1].anchorHref);
-		this.item1Img.setAttribute("src", this.receiveData[this.currentItem - 1 < 0 ? this.receiveData.length - 1 : this.currentItem - 1].imgSrc);
-		this.item2.setAttribute("href", this.receiveData[this.currentItem].anchorHref);
-		this.item2Img.setAttribute("src", this.receiveData[this.currentItem].imgSrc);
-		this.item3.setAttribute("href", this.receiveData[this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1].anchorHref);
-		this.item3Img.setAttribute("src", this.receiveData[this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1].imgSrc);
-		if(this.receiveAttributes){
-			this.setItemAttributes();
-		}
-		return this;
-	},
-	_setTitle : function(){
-		this.titleText.innerHTML = this.receiveData[this.currentItem].title;
-	},
-	_resetPosition : function(){
-		this.item1.style.left = -this.bannerWidth + "px";
-		this.item2.style.left = 0;
-		this.item3.style.left = this.bannerWidth + "px";
-	},
-	_highlightIcon : function(touch){
-		this.icons[(touch || this.direction) ? this.currentItem < this.receiveData.length - 1 ? this.currentItem + 1 : 0 : this.currentItem > 0 ? this.currentItem - 1 : this.receiveData.length - 1].removeAttribute("class");
-		this.icons[this.currentItem].className = "chosen";
-		this._setTitle();
-		return this;
-	},
-	_move : function(type, x){
-		if(type){
-			this.item2.style.left = x - this.bannerWidth + "px";
-			this.item3.style.left = x + "px";
-			this.item1.style.left = this.bannerWidth + "px";
-		}else{
-			this.item1.style.left = x - this.bannerWidth + "px";
-			this.item2.style.left = x + "px";
-			this.item3.style.left = this.bannerWidth + "px";
-		}
-	},
-	_autoMove : function(type, x, touch){
-		var _this = this, offsetX = x ? x : type ? 0 : this.bannerWidth;
-		this.blankTime = new BlankTimer();
-		this.blankTime._start(!type ?
-		function(){
-			var t = setInterval(function(){
-				if(offsetX > 0){
-					offsetX -= _this.bannerWidth / 100;
-					_this._move(true, offsetX);
-				}else{
-					clearInterval(t);
-					offsetX = 0;
-					_this._move(true, offsetX);
-					_this.currentItem = _this.currentItem + 1 > _this.receiveData.length - 1 ? 0 : _this.currentItem + 1;
-					_this._highlightIcon(type)._setData()._autoMove(_this.changeDirection ? type : null);
+	/*Ajax类*/
+	function Ajax(obj){
+		this.receiveObj = obj;
+		this._init();
+	}
+	Ajax.prototype = {
+		constructor : Ajax,
+		_init : function(){
+			this.xhr = new window.XMLHttpRequest() || window.ActiveXObject();
+			this._open();
+			this._addEvent();
+		},
+		_open : function(){
+			this.xhr.open(this.receiveObj.type || "get", this.receiveObj.url, this.receiveObj.async || true);
+		},
+		_addEvent : function(){
+			var _this = this;
+			this.xhr.onreadystatechange = function(){
+				if(this.readyState === 4){
+					if(this.status === 200){
+						if(_this.receiveObj.success(_this.receiveObj.dataType || _this.receiveObj.dataType === "json" ? eval("(" + this.responseText + ")") : this.responseText)){}
+					}else{
+						if(_this.receiveObj.failure(this.responseText)){}
+					}
 				}
-			}, touch ? 1 : 5);
-		} : function(){
-			var t = setInterval(function(){
-				if(offsetX < _this.bannerWidth){
-					offsetX += _this.bannerWidth / 100;
-					_this._move(false, offsetX);
-				}else{
-					clearInterval(t);
-					offsetX = _this.bannerWidth;
-					_this._move(false, offsetX);
-					_this.currentItem = _this.currentItem - 1 < 0 ? _this.receiveData.length - 1 : _this.currentItem - 1;
-					_this._highlightIcon(type)._setData()._autoMove(_this.changeDirection ? type : null);
-				}
-			}, touch ? 1 : 5);
-		}, touch);
-	},
-	_touchMove : function(type, distance){
-		if(type){
-			this.item2.style.left = distance + "px";
-			this.item1.style.left = distance - this.bannerWidth + "px";
-			this.item3.style.left = -this.bannerWidth + "px";
-		}else{
-			this.item2.style.left = -distance + "px";
-			this.item3.style.left = -distance + this.bannerWidth + "px";
-			this.item1.style.left = this.bannerWidth + "px";
+			};
+			this.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			this.xhr.send(this.receiveObj.data || null);
 		}
-	},
-	_setMovements : function(){
-		var _this = this, startX = 0, touchDirection;
-		this.banner.addEventListener("touchstart", function(e){
-			e.preventDefault();
-			startX = e.changedTouches[0].pageX;
-			_this.blankTime._end();
-		}, false);
-		this.banner.addEventListener("touchmove", function(e){
-			e.preventDefault();
-			touchDirection = e.changedTouches[0].pageX > startX;
-			_this._touchMove(touchDirection, Math.abs(e.changedTouches[0].pageX - startX));
-		}, false);
-		this.banner.addEventListener("touchend", function(e) {
-			e.preventDefault();
-			if(Math.abs(e.changedTouches[0].pageX - startX) < 10){
-				window.location.href = e.target.parentNode.getAttribute("href");
-			}else{
-				_this._autoMove(touchDirection, touchDirection ? Math.abs(e.changedTouches[0].pageX - startX) :  _this.bannerWidth - Math.abs(e.changedTouches[0].pageX - startX), true);
+	};
+	/*单张图片*/
+	function AImage(userObj, index, setting){
+		this.userObj = userObj;
+		this.index = index;
+		this.setting = setting;
+		this._init();
+	}
+	AImage.prototype = {
+		constructor : AImage,
+		_init : function(){
+			this.dom = document.createElement("a");
+			this._setHref();
+			this._setBg();
+		},
+		_setHref : function(){
+			if(this.setting.anchorHref){
+				this.dom.setAttribute("href", this.setting.anchorHref);
+				this.dom.setAttribute("target", "_blank");
 			}
-		}, false);
-		return this;
-	},
-	setItemAttributes : function(attributes){
-		this.receiveAttributes = this.receiveAttributes || attributes;
-		for(var i in this.receiveAttributes[this.direction ? this.currentItem + 1 > this.receiveData.length - 1 ? 0 : this.currentItem + 1 : this.currentItem >= 0 ? this.currentItem - 1 : this.receiveData.length - 1]){
-			this.item2.removeAttribute(i);
+		},
+		_setBg : function(){
+			this.dom.style.backgroundImage = "url(" + this.setting.imageSrc + ")";
+		},
+		fadeIn : function(){
+			this.dom.className = "current";
+			var _this = this,
+				opacity = 0,
+				t = setInterval(function(){
+					if(opacity < 1){
+						opacity = parseFloat((opacity + 0.1).toFixed(1));
+						_this.dom.style.opacity = opacity;
+						_this.dom.style.filter = "alpha(opacity=" + opacity * 100 + ")";
+					}else{
+						clearInterval(t);
+					}
+				}, 50);
+		},
+		fadeOut : function(){
+			this.dom.className = "normal";
+			var _this = this,
+				opacity = 1,
+				t = setInterval(function(){
+					if(opacity > 0){
+						opacity = parseFloat((opacity - 0.1).toFixed(1));
+						_this.dom.style.opacity = opacity;
+						_this.dom.style.filter = "alpha(opacity=" + opacity * 100 + ")";
+					}else{
+						clearInterval(t);
+					}
+				}, 50);
 		}
-		for(var i in this.receiveAttributes[this.currentItem]){
-			this.item2.setAttribute(i, this.receiveAttributes[this.currentItem][i]);
+	};
+	/*按钮*/
+	function Button(userObj, index){
+		this.userObj = userObj;
+		this.index = index;
+		this._init();
+		this._addEvent();
+	}
+	Button.prototype = {
+		constructor : Button,
+		_init : function(){
+			this.dom = document.createElement("em");
+			this.dom.className = "normal";
+		},
+		_addEvent : function(){
+			var _this = this;
+			this.dom.onclick = function(){
+				_this.userObj.setCurrentIndex(_this.index);
+				_this.userObj.oButton[_this.userObj.prevIndex].closeLight();
+				_this.highLight();
+				_this.userObj.userObj.oImage[_this.userObj.prevIndex].fadeOut();
+				_this.userObj.userObj.oImage[_this.index].fadeIn();
+			};
+		},
+		highLight : function(){
+			this.dom.className = "current";
+		},
+		closeLight : function(){
+			this.dom.className = "normal";
+		}
+	};
+	/*指示条*/
+	function Indicator(userObj, display){
+		this.userObj = userObj;
+		this.className = "indicator" + (display ? " display" : " none");
+		this.currentIndex = 0;
+		this.prevIndex = 0;
+		this._init();
+	}
+	Indicator.prototype = {
+		constructor : Indicator,
+		_init : function(){
+			this.dom = document.createElement("div");
+			this.dom.className = this.className;
+			this._buildAll();
+		},
+		_buildAll : function(){
+			this.oButton = new Array(this.userObj.imageSum);
+			for(var i = 0; i < this.userObj.imageSum; i++){
+				this.oButton[i] = new Button(this, i);
+				this.dom.appendChild(this.oButton[i].dom);
+			}
+		},
+		setCurrentIndex : function(index){
+			var prevIndex = this.currentIndex;
+			this.prevIndex = prevIndex;
+			this.currentIndex = index;
+		},
+		getCurrentIndex : function(){
+			return this.currentIndex;
+		},
+		getPrevIndex : function(){
+			return this.prevIndex;
+		}
+	};
+	/*Banner*/
+	function Banner(obj){
+		var _this = this;
+		this.receiveObj = obj;
+		this._getImage(function(){
+			_this.imageSum = _this.receiveObj.image.length;
+			_this._init();
+			_this._autoFade();
+		});
+	}
+	Banner.prototype = {
+		constructor : Banner,
+		_init : function(){
+			this._buildAll();
+		},
+		_getImage : function(callback){
+			var _this = this;
+			new Ajax({
+				type : "get",
+				url : this.receiveObj.image,
+				dataType : "json",
+				success : function(data){
+					_this.receiveObj.image = data.data;
+					callback();
+				}
+			});
+		},
+		_buildAll : function(){
+			this.dom = document.createElement("div");
+			this.dom.className = "bannerFade";
+			this._buildImage();
+			this._buildIndictor();
+			document.getElementById(this.receiveObj.position).appendChild(this.dom);
+			this.indicator.oButton[0].dom.click();
+		},
+		_buildImage : function(){
+			this.oImage = new Array(this.imageSum);
+			for(var i = 0; i < this.imageSum; i++){
+				this.oImage[i]= new AImage(this, i, this.receiveObj.image[i]);
+				this.dom.appendChild(this.oImage[i].dom);
+			}
+		},
+		_buildIndictor : function(){
+			this.indicator = new Indicator(this, this.receiveObj.indicator);
+			this.dom.appendChild(this.indicator.dom);
+		},
+		_autoFade : function(){
+			var _this = this,
+				t = setInterval(function(){
+					_this.indicator.oButton[_this.indicator.getCurrentIndex() > _this.imageSum - 2 ? 0 : _this.indicator.getCurrentIndex() + 1].dom.click();
+				}, 4000);
 		}
 	}
-};
+	return Banner;
+})({
+	info : true
+});
