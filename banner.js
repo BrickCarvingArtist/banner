@@ -52,6 +52,7 @@ var Banner = window.Banner || (function(setting){
 		constructor : AImage,
 		_init : function(){
 			this.dom = document.createElement("a");
+			this.dom.className = "normal";
 			this._setHref();
 			this._setBg();
 		},
