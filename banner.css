@@ -1,63 +1,51 @@
-.banner{
+.bannerFade{
 	position:relative;
-	width:16rem;
-	height:8rem;
-	overflow:hidden;
-}
-.banner .container{
-	width:32rem;
-}
-.banner a{
-	position:absolute;
-	top:0;
-	display:block;
-	width:16rem;
-	height:8rem;
-}
-.banner a:nth-of-type(1){
-	left:-16rem;
-}
-.banner a:nth-of-type(2){
-	left:0;
-}
-.banner a:nth-of-type(3){
-	left:16rem;
-}
-.banner img{
+	float:left;
 	width:100%;
 	height:100%;
 }
-.banner .title{
+.bannerFade a{
 	position:absolute;
-	bottom:0;
+	top:0;
 	left:0;
-	width:16rem;
-	height:1.45rem;
-	font-size:.675rem;
-	line-height:1.45rem;
-	font-family:Microsoft Yahei;
-	background:rgba(0, 0, 0, 0.4);
-	color:#fff;
+	width:100%;
+	height:100%;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	opacity:0;
+	filter:alpha(opacity=0);
 }
-.banner .title span{
-	float:left;
-	margin-left:.675rem;
+.bannerFade a.normal{
+	display:none;
+}
+.bannerFade a.current{
 	display:block;
-	max-width:10.5rem;
-	white-space:nowrap;
-	overflow:hidden;
-	text-overflow:ellipsis;
 }
-.banner .title p{
-	float:right;
-	margin-right:.375rem;
-	overflow:hidden;
+.bannerFade .indicator{
+	position:absolute;
+	bottom:20px;
+	left:0;
+	display:none;
+	width:100%;
+	height:16px;
+	text-align:center;
+	z-index:1;
 }
-.banner .title p em{
-	float:left;
-	margin-right:.3rem;
-	opacity:0.4;
+.bannerFade .indicator.display{
+	display:block;
 }
-.banner .title p .chosen{
-	opacity:1;
+.bannerFade .indicator em{
+	margin-right:20px;
+	display:inline-block;
+	width:16px;
+	height:16px;
+	border-radius:50%;
+	box-shadow:0 -1px 2px 0 rgb(102, 102, 102) inset;
+	cursor:pointer;
+}
+.bannerFade .indicator em.normal{
+	background-color:rgb(255, 255, 255);
+}
+.bannerFade .indicator em.current{
+	background-color:rgb(55, 141, 233);
 }
