@@ -1,5 +1,6 @@
 var Banner = window.Banner || (function(setting){
 	"use strict";
+	/*版权信息*/
 	Banner.INFO = {
 		AUTHOR : "BrickCarvingArtist/GitHub",
 		BEGINTIME : "2015/06/01",
