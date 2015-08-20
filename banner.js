@@ -14,33 +14,35 @@ var Banner = window.Banner || (function(setting){
 	}
 	/*Ajax类*/
 	function Ajax(obj){
-		this.receiveObj = obj;
-		this._init();
+		this.receiveData = obj;
+		this.transportData();
 	}
 	Ajax.prototype = {
-		constructor : Ajax,
-		_init : function(){
-			this.xhr = new window.XMLHttpRequest() || window.ActiveXObject();
-			this._open();
-			this._addEvent();
-		},
-		_open : function(){
-			this.xhr.open(this.receiveObj.type || "get", this.receiveObj.url, this.receiveObj.async || true);
-		},
-		_addEvent : function(){
-			var _this = this;
-			this.xhr.onreadystatechange = function(){
-				if(this.readyState === 4){
-					if(this.status === 200){
-						if(_this.receiveObj.success(_this.receiveObj.dataType || _this.receiveObj.dataType === "json" ? eval("(" + this.responseText + ")") : this.responseText)){}
-					}else{
-						if(_this.receiveObj.failure(this.responseText)){}
-					}
-				}
-			};
-			this.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			this.xhr.send(this.receiveObj.data || null);
-		}
+	    constructor : Ajax,
+	    transportData : function(){
+	        var xhr = new XMLHttpRequest(), _this = this;
+	        xhr.open(this.receiveData.type, this.receiveData.url, true);
+	        xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+	        xhr.onreadystatechange = function(){
+	            if(xhr.readyState === 4){
+	                var responseText = _this.receiveData.dataType && _this.receiveData.dataType.toLowerCase() === "json" ? eval("(" + xhr.responseText + ")") : xhr.responseText;
+	                if(xhr.status === 200){
+	                    if(_this.receiveData.success){
+	                        _this.receiveData.success(responseText);
+	                    }
+	                }else{
+	                    if(_this.receiveData.failure){
+	                        _this.receiveData.failure(responseText, xhr.status);
+	                    }
+	                }
+	            }
+	        };
+	        if(this.receiveData.data){
+	            xhr.send(this.receiveData.data);
+	        }else{
+	            xhr.send(null);
+	        }
+	    }
 	};
 	/*单张图片*/
 	function AImage(userObj, index, setting){
