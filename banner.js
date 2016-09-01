@@ -1,220 +1,90 @@
-var Banner = window.Banner || (function(setting){
-	"use strict";
-	/*版权信息*/
-	Banner.INFO = {
-		AUTHOR : "BrickCarvingArtist/GitHub",
-		BEGINTIME : "2015/06/01",
-		LATESTRELEASE : "2015/08/03",
-		LICENSE : "LGPL",
-		NAME : "Banner",
-		VERSION : "1.0"
-	};
-	if(setting.info){
-		console.warn(Banner.INFO);
+function Banner(option){
+	var container = document.createDocumentFragment(),
+		indicator = document.createElement("div"),
+		element = option.element,
+		data = option.data,
+		dataLen = data.length,
+		arrIndicator = [],
+		arrImage = data.map(function(item, index){
+			arrIndicator.push(createIndicator(index));
+			return createImage(index, item);
+		}),
+		currentIndex = 0,
+		previousIndex = getIndex(),
+		nextIndex = getIndex(1),
+		autoTimer;
+	indicator.className = "indicator";
+	function createImage(index, option){
+		var dom = document.createElement("a");
+		dom.href = option.anchorHref;
+		dom.title = option.name;
+		dom.style.backgroundImage = "url(" + option.imageUrl + ")";
+		container.appendChild(dom);
+		return dom;
 	}
-	/*Ajax类*/
-	function Ajax(obj){
-		this.receiveData = obj;
-		this.transportData();
+	function createIndicator(index){
+		var dom = document.createElement("em");
+		dom.innerText = index + 1;
+		dom.onclick = function(){
+			clearTimeout(autoTimer);
+			autoTimer = auto();
+			setIndex(currentIndex, index);
+		};
+		indicator.appendChild(dom);
+		return dom;
 	}
-	Ajax.prototype = {
-	    constructor : Ajax,
-	    transportData : function(){
-	        var xhr = new XMLHttpRequest(), _this = this;
-	        xhr.open(this.receiveData.type, this.receiveData.url, true);
-	        xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-	        xhr.onreadystatechange = function(){
-	            if(xhr.readyState === 4){
-	                var responseText = _this.receiveData.dataType && _this.receiveData.dataType.toLowerCase() === "json" ? eval("(" + xhr.responseText + ")") : xhr.responseText;
-	                if(xhr.status === 200){
-	                    if(_this.receiveData.success){
-	                        _this.receiveData.success(responseText);
-	                    }
-	                }else{
-	                    if(_this.receiveData.failure){
-	                        _this.receiveData.failure(responseText, xhr.status);
-	                    }
-	                }
-	            }
-	        };
-	        if(this.receiveData.data){
-	            xhr.send(this.receiveData.data);
-	        }else{
-	            xhr.send(null);
-	        }
-	    }
-	};
-	/*单张图片*/
-	function AImage(userObj, index, setting){
-		this.userObj = userObj;
-		this.index = index;
-		this.setting = setting;
-		this._init();
+	function createController(className, type){
+		var xmlns = "http://www.w3.org/2000/svg",
+			svg = document.createElementNS(xmlns, "svg"),
+			polyline = document.createElementNS(xmlns, "polyline");
+		svg.setAttribute("class", className);
+		svg.setAttribute("xmlns", xmlns);
+		polyline.setAttribute("fill", "none");
+		polyline.setAttribute("stroke", "rgb(204, 204, 204)");
+		polyline.setAttribute("stroke-width", 2);
+		polyline.setAttribute("stroke-linecap", "round");
+		polyline.setAttribute("points", type ? "1 1, 19 30, 1 59" : "19 1, 1 30, 19 59");
+		svg.appendChild(polyline);
+		svg.onmouseenter = function(){
+			polyline.setAttribute("stroke", "rgb(0, 128, 255)");
+		};
+		svg.onmouseleave = function(){
+			polyline.setAttribute("stroke", "rgb(204, 204, 204)");
+		};
+		svg.onclick = function(){
+			clearTimeout(autoTimer);
+			autoTimer = auto();
+			setIndex(currentIndex, getIndex(type));
+		};
+		container.appendChild(svg);
 	}
-	AImage.prototype = {
-		constructor : AImage,
-		_init : function(){
-			this.dom = document.createElement("a");
-			this.dom.className = "normal";
-			this._setHref();
-			this._setBg();
-		},
-		_setHref : function(){
-			if(this.setting.anchorHref){
-				this.dom.setAttribute("href", this.setting.anchorHref);
-				this.dom.setAttribute("target", "_blank");
-			}
-		},
-		_setBg : function(){
-			this.dom.style.backgroundImage = "url(" + this.setting.imageSrc + ")";
-		},
-		fadeIn : function(){
-			this.dom.className = "current";
-			var _this = this,
-				opacity = 0,
-				t = setInterval(function(){
-					if(opacity < 1){
-						opacity = parseFloat((opacity + 0.1).toFixed(1));
-						_this.dom.style.opacity = opacity;
-						_this.dom.style.filter = "alpha(opacity=" + opacity * 100 + ")";
-					}else{
-						clearInterval(t);
-					}
-				}, 50);
-		},
-		fadeOut : function(){
-			this.dom.className = "normal";
-			var _this = this,
-				opacity = 1,
-				t = setInterval(function(){
-					if(opacity > 0){
-						opacity = parseFloat((opacity - 0.1).toFixed(1));
-						_this.dom.style.opacity = opacity;
-						_this.dom.style.filter = "alpha(opacity=" + opacity * 100 + ")";
-					}else{
-						clearInterval(t);
-					}
-				}, 50);
+	function getIndex(type){
+		if(type){
+			return currentIndex < dataLen - 1 ? currentIndex + 1 : 0;
 		}
-	};
-	/*按钮*/
-	function Button(userObj, index){
-		this.userObj = userObj;
-		this.index = index;
-		this._init();
-		this._addEvent();
+		return currentIndex > 0 ? currentIndex - 1 : dataLen - 1;
 	}
-	Button.prototype = {
-		constructor : Button,
-		_init : function(){
-			this.dom = document.createElement("em");
-			this.dom.className = "normal";
-		},
-		_addEvent : function(){
-			var _this = this;
-			this.dom.onclick = function(){
-				_this.userObj.setCurrentIndex(_this.index);
-				_this.userObj.oButton[_this.userObj.prevIndex].closeLight();
-				_this.highLight();
-				_this.userObj.userObj.oImage[_this.userObj.prevIndex].fadeOut();
-				_this.userObj.userObj.oImage[_this.index].fadeIn();
-			};
-		},
-		highLight : function(){
-			this.dom.className = "current";
-		},
-		closeLight : function(){
-			this.dom.className = "normal";
-		}
-	};
-	/*指示条*/
-	function Indicator(userObj, display){
-		this.userObj = userObj;
-		this.className = "indicator" + (display ? " display" : " none");
-		this.currentIndex = 0;
-		this.prevIndex = 0;
-		this._init();
+	function setIndex(prev, curr){
+		previousIndex = prev;
+		currentIndex = curr;
+		nextIndex = getIndex(1);
+		arrImage[previousIndex].classList.remove("current");
+		arrImage[currentIndex].classList.add("current");
+		arrIndicator[previousIndex].classList.remove("current");
+		arrIndicator[currentIndex].classList.add("current");
 	}
-	Indicator.prototype = {
-		constructor : Indicator,
-		_init : function(){
-			this.dom = document.createElement("div");
-			this.dom.className = this.className;
-			this._buildAll();
-		},
-		_buildAll : function(){
-			this.oButton = new Array(this.userObj.imageSum);
-			for(var i = 0; i < this.userObj.imageSum; i++){
-				this.oButton[i] = new Button(this, i);
-				this.dom.appendChild(this.oButton[i].dom);
-			}
-		},
-		setCurrentIndex : function(index){
-			var prevIndex = this.currentIndex;
-			this.prevIndex = prevIndex;
-			this.currentIndex = index;
-		},
-		getCurrentIndex : function(){
-			return this.currentIndex;
-		},
-		getPrevIndex : function(){
-			return this.prevIndex;
-		}
-	};
-	/*Banner*/
-	function Banner(obj){
-		var _this = this;
-		this.receiveObj = obj;
-		this._getImage(function(){
-			_this.imageSum = _this.receiveObj.image.length;
-			_this._init();
-			_this._autoFade();
-		});
+	function auto(){
+		return setInterval(function(){
+			setIndex(currentIndex, getIndex(1));
+		}, 2000);
 	}
-	Banner.prototype = {
-		constructor : Banner,
-		_init : function(){
-			this._buildAll();
-		},
-		_getImage : function(callback){
-			var _this = this;
-			new Ajax({
-				type : "get",
-				url : this.receiveObj.image,
-				dataType : "json",
-				success : function(data){
-					_this.receiveObj.image = data.data;
-					callback();
-				}
-			});
-		},
-		_buildAll : function(){
-			this.dom = document.createElement("div");
-			this.dom.className = "bannerFade";
-			this._buildImage();
-			this._buildIndictor();
-			document.getElementById(this.receiveObj.position).appendChild(this.dom);
-			this.indicator.oButton[0].dom.click();
-		},
-		_buildImage : function(){
-			this.oImage = new Array(this.imageSum);
-			for(var i = 0; i < this.imageSum; i++){
-				this.oImage[i]= new AImage(this, i, this.receiveObj.image[i]);
-				this.dom.appendChild(this.oImage[i].dom);
-			}
-		},
-		_buildIndictor : function(){
-			this.indicator = new Indicator(this, this.receiveObj.indicator);
-			this.dom.appendChild(this.indicator.dom);
-		},
-		_autoFade : function(){
-			var _this = this,
-				t = setInterval(function(){
-					_this.indicator.oButton[_this.indicator.getCurrentIndex() > _this.imageSum - 2 ? 0 : _this.indicator.getCurrentIndex() + 1].dom.click();
-				}, 4000);
-		}
-	}
-	return Banner;
-})({
-	info : true
-});
+	var init = function(){
+		arrImage[0].classList.add("current");
+		arrIndicator[0].classList.add("current");
+		createController("previous");
+		createController("next", 1);
+		container.appendChild(indicator);
+		document.querySelector(element).appendChild(container);
+		autoTimer = auto();
+	}();
+}

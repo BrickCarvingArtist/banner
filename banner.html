@@ -1,20 +1,45 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+﻿<!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-type" content="utf-8" />
-		<link rel="stylesheet" href="reset.css" />
+		<meta charset="utf-8" />
 		<link rel="stylesheet" href="banner.css" />
 		<title>Banner</title>
 	</head>
 	<body>
-		<div id="banner"></div>
+		<div class="banner"></div>
 	</body>
 	<script src="banner.js"></script>
 	<script>
-		new Banner({//实例化Banner
-			position : "banner",//必选，父容器标签id
-			indicator : true,//可选，是否显示指示按钮
-			image : "/banner.json"//必选，图片请求地址
+		var data = [
+			{
+				name : "我是图片1",
+				anchorHref : "https://www.baidu.com/",
+				imageUrl : "./1.jpg"
+			},
+			{
+				name : "我是图片2",
+				anchorHref : "http://www.qq.com/",
+				imageUrl : "./2.jpg"
+			},
+			{
+				name : "我是图片3",
+				anchorHref : "https://www.taobao.com/",
+				imageUrl : "./3.jpg"
+			},
+			{
+				name : "我是图片4",
+				anchorHref : "https://www.tmall.com/",
+				imageUrl : "./4.jpg"
+			},
+			{
+				name : "我是图片5",
+				anchorHref : "https://www.163.com/",
+				imageUrl : "./5.jpg"
+			}
+		];
+		Banner({
+			element : ".banner",
+			data : data
 		});
 	</script>
 </html>
