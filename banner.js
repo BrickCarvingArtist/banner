@@ -1,9 +1,17 @@
 function Banner(option){
 	var container = document.createDocumentFragment(),
 		indicator = document.createElement("div"),
-		element = option.element,
+		element = document.querySelector(option.element),
+		keywords = option.keywords,
+		title = keywords.title,
+		href = keywords.href,
+		url = keywords.url,
 		data = option.data,
 		dataLen = data.length,
+		theme = option.theme,
+		controller = option.controller,
+		indicatorTheme = option.indicator,
+		duration = (option.duration || 2) * 1000,
 		arrIndicator = [],
 		arrImage = data.map(function(item, index){
 			arrIndicator.push(createIndicator(index));
@@ -13,22 +21,20 @@ function Banner(option){
 		previousIndex = getIndex(),
 		nextIndex = getIndex(1),
 		autoTimer;
-	indicator.className = "indicator";
 	function createImage(index, option){
 		var dom = document.createElement("a");
-		dom.href = option.anchorHref;
-		dom.title = option.name;
-		dom.style.backgroundImage = "url(" + option.imageUrl + ")";
+		dom.href = option[href];
+		dom.title = option[title];
+		dom.style.backgroundImage = "url(" + option[url] + ")";
 		container.appendChild(dom);
 		return dom;
 	}
 	function createIndicator(index){
 		var dom = document.createElement("em");
-		dom.innerText = index + 1;
+		indicatorTheme >> 1 || (dom.innerText = index + 1);
 		dom.onclick = function(){
-			clearTimeout(autoTimer);
-			autoTimer = auto();
-			setIndex(currentIndex, index);
+			restart();
+			setIndex(index);
 		};
 		indicator.appendChild(dom);
 		return dom;
@@ -40,21 +46,20 @@ function Banner(option){
 		svg.setAttribute("class", className);
 		svg.setAttribute("xmlns", xmlns);
 		polyline.setAttribute("fill", "none");
-		polyline.setAttribute("stroke", "rgb(204, 204, 204)");
+		polyline.setAttribute("stroke", "rgba(255, 255, 255, .4)");
 		polyline.setAttribute("stroke-width", 2);
 		polyline.setAttribute("stroke-linecap", "round");
 		polyline.setAttribute("points", type ? "1 1, 19 30, 1 59" : "19 1, 1 30, 19 59");
 		svg.appendChild(polyline);
 		svg.onmouseenter = function(){
-			polyline.setAttribute("stroke", "rgb(0, 128, 255)");
+			polyline.setAttribute("stroke", "white");
 		};
 		svg.onmouseleave = function(){
-			polyline.setAttribute("stroke", "rgb(204, 204, 204)");
+			polyline.setAttribute("stroke", "rgba(255, 255, 255, .4)");
 		};
 		svg.onclick = function(){
-			clearTimeout(autoTimer);
-			autoTimer = auto();
-			setIndex(currentIndex, getIndex(type));
+			restart();
+			setIndex(getIndex(type));
 		};
 		container.appendChild(svg);
 	}
@@ -64,27 +69,33 @@ function Banner(option){
 		}
 		return currentIndex > 0 ? currentIndex - 1 : dataLen - 1;
 	}
-	function setIndex(prev, curr){
-		previousIndex = prev;
-		currentIndex = curr;
+	function setIndex(index){
+		theme && (arrImage[previousIndex].classList.remove("previous"), arrImage[currentIndex].classList.add("previous"));
+		arrImage[currentIndex].classList.remove("current");
+		arrIndicator[currentIndex].classList.remove("current");
+		previousIndex = currentIndex;
+		currentIndex = index;
 		nextIndex = getIndex(1);
-		arrImage[previousIndex].classList.remove("current");
 		arrImage[currentIndex].classList.add("current");
-		arrIndicator[previousIndex].classList.remove("current");
 		arrIndicator[currentIndex].classList.add("current");
 	}
-	function auto(){
-		return setInterval(function(){
-			setIndex(currentIndex, getIndex(1));
-		}, 2000);
+	function start(){
+		autoTimer = setInterval(function(){
+			setIndex(getIndex(1));
+		}, duration);
+	}
+	function restart(){
+		clearTimeout(autoTimer);
+		start();
 	}
 	var init = function(){
-		arrImage[0].classList.add("current");
+		element.classList.add(["tab", "fade", "slide"][theme || 0]);
+		indicator.className = "indicator";
+		indicatorTheme && indicator.classList.add("theme" + indicatorTheme);
+		controller && (createController("previous"), createController("next", 1));
+		indicatorTheme && container.appendChild(indicator);
+		element.appendChild(container);
 		arrIndicator[0].classList.add("current");
-		createController("previous");
-		createController("next", 1);
-		container.appendChild(indicator);
-		document.querySelector(element).appendChild(container);
-		autoTimer = auto();
+		start();
 	}();
 }
