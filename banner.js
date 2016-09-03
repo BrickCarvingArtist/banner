@@ -1,5 +1,5 @@
 //轮播图组件
-function Banner(option){
+function Banner(option){ //option 组件配置
 	//初始化方法
 	function init(){
 		var container = document.createDocumentFragment(), //创建轮播图容器元素
