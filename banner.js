@@ -37,7 +37,7 @@ function Banner(option){
 		dom.title = option[title]; //设置提示标题
 		dom.style.backgroundImage = "url(" + option[url] + ")"; //设置背景图片
 		container.appendChild(dom); //新增至轮播图容器元素中
-		return dom;
+		return dom; //返回单个图片元素
 	}
 	//创建单个指针元素方法
 	function createIndicator(index){ //index 指针下标
@@ -48,7 +48,7 @@ function Banner(option){
 			setIndex(index); //设置轮播当前下标为指针下标
 		};
 		indicator.appendChild(dom); //新增至指针容器中
-		return dom;
+		return dom; //返回单个指针元素
 	}
 	//创建翻页控制方法
 	function createController(className, type){ //className 翻页元素类名, type (false:前翻页, true:后翻页)
