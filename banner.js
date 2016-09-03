@@ -1,35 +1,33 @@
 //轮播图组件
 function Banner(option){ //option 组件配置
-	//初始化方法
-	function init(){
-		var container = document.createDocumentFragment(), //创建轮播图容器元素
-			indicator = document.createElement("div"), //创建指针容器元素
-			element = document.querySelector(option.element), //获取轮播图插入位置元素
-			keywords = option.keywords, //设置所有字段名称
-			title = keywords.title, //设置title字段名称 (用做图片提示标题)
-			href = keywords.href, //设置href字段名称 (用做图片链接)
-			url = keywords.url, //设置url字段名称 (用做图片背景图片地址)
-			data = option.data, //设置数据
-			dataLen = data.length, //设置数据个数
-			theme = option.theme, //设置轮播主题
-			controller = option.controller, //设置轮播前后翻页控制
-			indicatorTheme = option.indicator, //设置指针主题
-			duration = (option.duration || 2) * 1000, //设置秒数间隔
-			arrIndicator = [], //创建下标元素集合
-			arrImage = data.map(function(item, index){ //创建图片元素集合
-				arrIndicator.push(createIndicator(index)); //创建单个下标元素并新增至下表元素集合中
-				return createImage(item); //创建单个图片元素并新增至下表元素集合中
-			}),
-			currentIndex = 0, //设置轮播图当前下标
-			previousIndex = getIndex(), //设置轮播图前一个下标
-			nextIndex = getIndex(1), //设置轮播图下一个下标
-			autoTimer; //设置定时器
-		element.classList.add(["tab", "fade", "slide"][theme || 0]); //设置轮播图插入位置元素主题类名
-		controller && (createController("previous"), createController("next", 1)); //创建翻页控制
-		indicatorTheme && (indicator.className = "indicator", indicator.classList.add("theme" + indicatorTheme), container.appendChild(indicator)); //设置指针容器类名, 主题类名, 新增至轮播图容器中
-		element.appendChild(container); //新增轮播图容器至轮播图插入位置元素中
-		arrIndicator[0].classList.add("current"); //为第一个指针添加当前被选中类名
-	}
+	var container = document.createDocumentFragment(), //创建轮播图容器元素
+		indicator = document.createElement("div"), //创建指针容器元素
+		element = document.querySelector(option.element), //获取轮播图插入位置元素
+		keywords = option.keywords, //设置所有字段名称
+		title = keywords.title, //设置title字段名称 (用做图片提示标题)
+		href = keywords.href, //设置href字段名称 (用做图片链接)
+		url = keywords.url, //设置url字段名称 (用做图片背景图片地址)
+		data = option.data, //设置数据
+		dataLen = data.length, //设置数据个数
+		theme = option.theme, //设置轮播主题
+		controller = option.controller, //设置轮播前后翻页控制
+		indicatorTheme = option.indicator, //设置指针主题
+		duration = (option.duration || 2) * 1000, //设置秒数间隔
+		arrIndicator = [], //创建下标元素集合
+		arrImage = data.map(function(item, index){ //创建图片元素集合
+			arrIndicator.push(createIndicator(index)); //创建单个下标元素并新增至下表元素集合中
+			return createImage(item); //创建单个图片元素并新增至下表元素集合中
+		}),
+		currentIndex = 0, //设置轮播图当前下标
+		previousIndex = getIndex(), //设置轮播图前一个下标
+		nextIndex = getIndex(1), //设置轮播图下一个下标
+		autoTimer; //设置定时器
+	element.classList.add(["tab", "fade", "slide"][theme || 0]); //设置轮播图插入位置元素主题类名
+	controller && (createController("previous"), createController("next", 1)); //创建翻页控制
+	indicatorTheme && (indicator.className = "indicator", indicator.classList.add("theme" + indicatorTheme), container.appendChild(indicator)); //设置指针容器类名, 主题类名, 新增至轮播图容器中
+	element.appendChild(container); //新增轮播图容器至轮播图插入位置元素中
+	arrIndicator[0].classList.add("current"); //为第一个指针添加当前被选中类名
+	start(); //执行启动轮播
 	//创建单个图片元素方法
 	function createImage(option){ //option 配置
 		var dom = document.createElement("a"); //创建单个图片元素
@@ -104,6 +102,4 @@ function Banner(option){ //option 组件配置
 		clearTimeout(autoTimer); //清除计时器
 		start(); //执行轮播
 	}
-	init(); //执行初始化
-	start(); //执行启动轮播
 }
