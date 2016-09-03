@@ -2,15 +2,16 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<!-- 引入banner.js插件样式 -->
-		<link rel="stylesheet" href="banner.css" />
+		<!-- 引入banner.js组件样式 -->
+		<link rel="stylesheet" href="banner.min.css" />
 		<title>Banner</title>
 	</head>
 	<body>
+		<!--轮播图插入位置元素-->
 		<div class="banner"></div>
 	</body>
-	<!-- 引入banner.js插件脚本 -->
-	<script src="banner.js"></script>
+	<!-- 引入banner.js组件脚本 -->
+	<script src="banner.min.js"></script>
 	<script>
 		//JSON格式数据
 		var data = [
@@ -40,7 +41,7 @@
 				imageUrl : "./5.jpg"
 			}
 		];
-		//创建一个轮播图
+		//创建一个轮播图组件
 		Banner({
 			element : ".banner", //必需, 轮播图插入的页面位置 (选择器字符串)
 			keywords : { //必需, 字段名称 (参照以上data格式, 与data配置数据共同作用)
