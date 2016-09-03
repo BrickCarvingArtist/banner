@@ -97,7 +97,7 @@ function Banner(option){ //option 组件配置
 	function start(){
 		autoTimer = setInterval(function(){ //设置定时器
 			setIndex(getIndex(1)); //设置下标为下一个下标
-		}, duration);
+		}, duration); //设置秒数间隔
 	}
 	//重新轮播方法
 	function restart(){
