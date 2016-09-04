@@ -15,7 +15,7 @@ function Banner(option){ //option 组件配置
 		duration = (option.duration || 2) * 1000, //设置秒数间隔
 		arrIndicator = [], //创建下标元素集合
 		arrImage = data.map(function(item, index){ //创建图片元素集合
-			arrIndicator.push(createIndicator(index)); //创建单个下标元素并新增至下表元素集合中
+			arrIndicator.push(createIndicator(index)); //创建单个下标元素并新增至下标元素集合中
 			return createImage(item); //创建单个图片元素并新增至下表元素集合中
 		}),
 		currentIndex = 0, //设置轮播图当前下标

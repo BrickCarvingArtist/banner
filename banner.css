@@ -1,8 +1,6 @@
 /***轮播图***/
 .banner{
 	position:relative;
-	width:400px;
-	height:300px;
 	overflow:hidden;
 }
 /**图片**/
@@ -14,6 +12,9 @@
 	background-size:100% 100%;
 }
 /*主题 - 切换*/
+.banner.tab a::selection{
+	background-color:transparent;
+}
 .banner.tab a:first-of-type, .banner.tab a.current{
 	z-index:1;
 }
